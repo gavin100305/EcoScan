@@ -1,8 +1,11 @@
 import { useAuth } from './contexts/AuthContext';
-import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Scan from './pages/Scan';
+import History from './pages/History';
+import Result from './pages/Result';
+import Compare from './pages/Compare';
 import './App.css';
 
 function App() {
@@ -18,8 +21,13 @@ function App() {
   if (path === '/' && !user) return <Landing />;
   if (path === '/login') return <Login />;
   if (path === '/signup') return <Signup />;
+  if (path === '/scan' && user) return <Scan />;
+  if (path === '/history' && user) return <History />;
+  if (path === '/result' && user) return <Result />;
+  if (path === '/compare' && user) return <Compare />;
 
-  return <div>{user ? <Dashboard /> : <Login />}</div>;
+  // Default: redirect to scan if logged in, login if not
+  return <div>{user ? <Scan /> : <Login />}</div>;
 }
 
 export default App;

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext({});
@@ -14,7 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [syncedUsers, setSyncedUsers] = useState(new Set());
+  const syncedUsersRef = useRef(new Set());
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -27,10 +27,10 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       
       // Only sync on SIGNED_IN or INITIAL_SESSION, and only once per user
-      if (user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && !syncedUsers.has(user.id)) {
-        setSyncedUsers(prev => new Set(prev).add(user.id));
+      if (user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && !syncedUsersRef.current.has(user.id)) {
+        syncedUsersRef.current.add(user.id);
         
-        fetch('http://localhost:8000/api/user/sync-user', {
+        fetch(`${import.meta.env.VITE_API_URL}/user/sync-user`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, [syncedUsers]);
+  }, []);
 
   const signUp = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({ email, password });

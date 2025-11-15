@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { RiRecycleFill } from 'react-icons/ri';
 
 // Inline SVG icons to avoid react-icons export issues
@@ -94,7 +95,12 @@ export default function Features() {
   return (
     <section id="features" className="py-16 px-6 sm:px-8 lg:px-12 bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500">
               Smart Scanning
@@ -104,59 +110,95 @@ export default function Features() {
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
             Everything you need to make informed, environmentally-friendly purchasing decisions
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
           {/* Top-left: Large card that spans 2 columns and 2 rows */}
-          <div className="md:col-span-2 md:row-span-2 p-8 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300 flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="md:col-span-2 md:row-span-2 p-8 bg-card rounded-2xl border border-border transition-all duration-300 flex flex-col justify-center">
             <div className={`w-14 h-14 ${features[0].iconBg} rounded-xl flex items-center justify-center mb-6`}>
               {React.createElement(features[0].icon, { className: `w-8 h-8 ${features[0].iconColor}` })}
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold mb-3 text-foreground">{features[0].title}</h3>
             <p className="text-muted-foreground text-base leading-relaxed">{features[0].description}</p>
-          </div>
+          </motion.div>
 
           {/* Top-right stacked cards (two rows) */}
-          <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300 h-full flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="p-6 bg-card rounded-2xl border border-border transition-all duration-300 h-full flex flex-col justify-center">
             <div className={`w-14 h-14 ${features[1].iconBg} rounded-xl flex items-center justify-center mb-4`}>
               {React.createElement(features[1].icon, { className: `w-7 h-7 ${features[1].iconColor}` })}
             </div>
             <h3 className="text-lg font-bold mb-2 text-foreground">{features[1].title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">{features[1].description}</p>
-          </div>
+          </motion.div>
 
-          <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300 h-full flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="p-6 bg-card rounded-2xl border border-border transition-all duration-300 h-full flex flex-col justify-center">
             <div className={`w-14 h-14 ${features[2].iconBg} rounded-xl flex items-center justify-center mb-4`}>
               {React.createElement(features[2].icon, { className: `w-7 h-7 ${features[2].iconColor}` })}
             </div>
             <h3 className="text-lg font-bold mb-2 text-foreground">{features[2].title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">{features[2].description}</p>
-          </div>
+          </motion.div>
 
           {/* Bottom row - three equal cards */}
-          <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="p-6 bg-card rounded-2xl border border-border transition-all duration-300">
             <div className={`w-14 h-14 ${features[3].iconBg} rounded-xl flex items-center justify-center mb-4`}>
               {React.createElement(features[3].icon, { className: `w-7 h-7 ${features[3].iconColor}` })}
             </div>
             <h3 className="text-lg font-bold mb-2 text-foreground">{features[3].title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">{features[3].description}</p>
-          </div>
+          </motion.div>
 
-          <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="p-6 bg-card rounded-2xl border border-border transition-all duration-300">
             <div className={`w-14 h-14 ${features[4].iconBg} rounded-xl flex items-center justify-center mb-4`}>
               {React.createElement(features[4].icon, { className: `w-7 h-7 ${features[4].iconColor}` })}
             </div>
             <h3 className="text-lg font-bold mb-2 text-foreground">{features[4].title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">{features[4].description}</p>
-          </div>
+          </motion.div>
 
-          <div className="p-6 bg-card rounded-2xl border border-border hover:shadow-md transition-all duration-300">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+            className="p-6 bg-card rounded-2xl border border-border transition-all duration-300">
             <div className={`w-14 h-14 ${features[5].iconBg} rounded-xl flex items-center justify-center mb-4`}>
               {React.createElement(features[5].icon, { className: `w-7 h-7 ${features[5].iconColor}` })}
             </div>
             <h3 className="text-lg font-bold mb-2 text-foreground">{features[5].title}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">{features[5].description}</p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

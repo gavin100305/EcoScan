@@ -32,3 +32,23 @@ export const getProfile = asyncHandler(async (req, res) => {
 
   res.json(new ApiResponse(200, profile, 'Profile retrieved successfully'));
 });
+
+export const deleteUser = asyncHandler(async (req, res) => {
+  const userId = req.user?.id;
+  
+  if (!userId) {
+    throw new ApiError(401, 'User not authenticated');
+  }
+
+  // Delete all user's scans first (cascade should handle this, but being explicit)
+  await prisma.scan.deleteMany({
+    where: { userId }
+  });
+
+  // Delete user profile
+  await prisma.profile.delete({
+    where: { id: userId }
+  });
+
+  res.json(new ApiResponse(200, null, 'User account deleted successfully'));
+});

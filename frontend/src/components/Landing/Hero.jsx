@@ -1,27 +1,33 @@
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { HiDeviceMobile } from 'react-icons/hi';
 
 import BlurText from '../ui/BlurText';
 
 export default function Hero() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 80);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
     <section className="relative pt-28 pb-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background to-primary/5 overflow-hidden transition-colors duration-300">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <motion.div 
+          className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
       </div>
 
       <div className="relative max-w-5xl mx-auto text-center">
        
 
-        <h1 className={`text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'} transition-all duration-700 ease-out`}>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
           <span className="block">
             <BlurText
               as="span"
@@ -42,38 +48,70 @@ export default function Hero() {
               direction="top"
             />
           </span>
-        </h1>
+        </motion.h1>
 
-        <p className={`text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'} transition-all duration-700 ease-out delay-150`}>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Simply scan a product image with your camera to instantly discover its sustainability attributes, material composition, and environmental footprint.
-        </p>
+        </motion.p>
 
-        <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'} transition-all duration-700 ease-out delay-300`}>
-          <a
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <motion.a
             href="/dashboard"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
           >
             Scan Now
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.svg 
+              className="w-5 h-5" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              whileHover={{ x: 3 }}
+              transition={{ duration: 0.2 }}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
-          <a
+            </motion.svg>
+          </motion.a>
+          <motion.a
             href="#features"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-primary text-primary font-semibold rounded-full hover:bg-primary/10 transition-colors"
           >
             Learn More
-          </a>
-        </div>
+          </motion.a>
+        </motion.div>
 
         {/* Hero Image Placeholder */}
-        <div className="relative mx-auto max-w-3xl rounded-2xl overflow-hidden bg-card border border-border h-96 flex items-center justify-center transition-colors duration-300">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="relative mx-auto max-w-3xl rounded-2xl overflow-hidden bg-card border border-border h-96 flex items-center justify-center transition-colors duration-300">
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-teal-500/5"></div>
-          <div className="relative z-10 text-center">
-            <HiDeviceMobile className="text-6xl mb-4 mx-auto text-primary" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="relative z-10 text-center">
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <HiDeviceMobile className="text-6xl mb-4 mx-auto text-primary" />
+            </motion.div>
             <p className="text-muted-foreground">Product Scan Preview</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
