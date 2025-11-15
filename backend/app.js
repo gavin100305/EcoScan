@@ -8,10 +8,18 @@ import errorHandler from './src/middlewares/error.middleware.js'
 
 const app = express()
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://eco-scan-self.vercel.app",
+  ];
+  
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    })
+  );
 
 app.use(express.json())
 
