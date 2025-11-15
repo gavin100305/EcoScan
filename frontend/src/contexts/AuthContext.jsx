@@ -22,7 +22,20 @@ export const AuthProvider = ({ children }) => {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const user = session?.user ?? null;
+      setUser(user);
+      
+      if (user) {
+        fetch('http://localhost:8000/api/user/sync-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            id: user.id, 
+            email: user.email,
+            fullName: user.user_metadata?.full_name || user.user_metadata?.name
+          })
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -43,12 +56,23 @@ export const AuthProvider = ({ children }) => {
     return { error };
   };
 
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}`
+      }
+    });
+    return { data, error };
+  };
+
   const value = {
     user,
     loading,
     signUp,
     signIn,
-    signOut
+    signOut,
+    signInWithGoogle
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -7,8 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+model Profile {
+  id        String   @id
+  email     String?  @unique
+  fullName  String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  scans     Scan[]
 }
+
+model Scan {
+  id              String   @id @default(uuid())
+  userId          String
+  user            Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imagePath       String
+  productName     String
+  materialType    String
+  recyclability   String
+  carbonFootprint String
+  disposalMethod  String
+  timestamp       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([timestamp])
+}
+
