@@ -48,10 +48,13 @@ const testimonials = [
   }
 ];
 
+console.log("DEPLOYED API URL =", import.meta.env.VITE_API_URL);
+
 export default function Landing() {
   return (
     <div>
       <Navigation />
+      
       <Hero />
       <Features />
       <Testimonials 
