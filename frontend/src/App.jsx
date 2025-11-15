@@ -1,18 +1,18 @@
 import { useAuth } from './contexts/AuthContext';
 import Auth from './components/Auth';
-import Profile from './components/Profile';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
   }
 
   return (
     <div>
-      {user ? <Profile /> : <Auth />}
+      {user ? <Dashboard /> : <Auth />}
     </div>
   );
 }
