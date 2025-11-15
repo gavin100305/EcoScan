@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { HiDeviceMobile } from 'react-icons/hi';
+import { useTheme } from '../../contexts/ThemeContext';
 
 import BlurText from '../ui/BlurText';
 
 export default function Hero() {
+  const { isDark } = useTheme();
+
   return (
     <section className="relative pt-28 pb-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background to-primary/5 overflow-hidden transition-colors duration-300">
       {/* Animated background elements */}
@@ -96,21 +98,16 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-          className="relative mx-auto max-w-3xl rounded-2xl overflow-hidden bg-card border border-border h-96 flex items-center justify-center transition-colors duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-teal-500/5"></div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="relative z-10 text-center">
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <HiDeviceMobile className="text-6xl mb-4 mx-auto text-primary" />
-            </motion.div>
-            <p className="text-muted-foreground">Product Scan Preview</p>
-          </motion.div>
+          className="relative mx-auto max-w-3xl rounded-2xl overflow-hidden bg-card border border-border shadow-2xl">
+          <motion.img
+            key={isDark ? 'dark' : 'light'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            src={isDark ? '/dark_mode.png' : '/light_mode.png'}
+            alt="Product Scan Preview"
+            className="w-full h-auto object-cover"
+          />
         </motion.div>
       </div>
     </section>
