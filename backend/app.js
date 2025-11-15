@@ -11,6 +11,7 @@ const app = express()
 const allowedOrigins = [
     "http://localhost:5173",
     "https://eco-scan-self.vercel.app",
+    "https://eco-scan-five.vercel.app/",
   ];
   
   app.use(
