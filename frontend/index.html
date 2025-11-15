@@ -4,6 +4,40 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme');
+          var isDark = false;
+          if (saved === 'dark') {
+            isDark = true;
+          } else if (saved === 'light') {
+            isDark = false;
+          } else {
+            isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          }
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.backgroundColor = 'oklch(0.12 0 0)';
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.style.backgroundColor = 'oklch(0.98 0 0)';
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {
+          // ignore
+        }
+      })();
+    </script>
+    <style>
+      html {
+        background-color: oklch(0.98 0 0);
+      }
+      html.dark {
+        background-color: oklch(0.12 0 0);
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">

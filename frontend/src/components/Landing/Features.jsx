@@ -1,4 +1,5 @@
 import React from 'react';
+import { RiRecycleFill } from 'react-icons/ri';
 
 // Inline SVG icons to avoid react-icons export issues
 function MagIcon(props) {
@@ -10,13 +11,7 @@ function MagIcon(props) {
   );
 }
 
-function RecycleIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path strokeWidth="1.5" d="M3 12l3-3v6L3 12zM21 12l-3 3V9l3 3zM7.5 4.5L12 9l-4.5 4.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+// use RiRecycleFill as the main recycle icon
 
 function LeafIcon(props) {
   return (
@@ -60,7 +55,7 @@ export default function Features() {
       iconColor: 'text-gray-700 dark:text-gray-300'
     },
     {
-      icon: RecycleIcon,
+      icon: RiRecycleFill,
       title: 'Recyclability Info',
       description: 'Learn exactly how and where to recycle or properly dispose of items',
       iconBg: 'bg-green-100 dark:bg-green-900/30',

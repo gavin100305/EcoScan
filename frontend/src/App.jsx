@@ -1,7 +1,8 @@
 import { useAuth } from './contexts/AuthContext';
-import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import './App.css';
 
 function App() {
@@ -14,15 +15,11 @@ function App() {
   // Simple routing based on URL path
   const path = window.location.pathname;
 
-  if (path === '/' && !user) {
-    return <Landing />;
-  }
+  if (path === '/' && !user) return <Landing />;
+  if (path === '/login') return <Login />;
+  if (path === '/signup') return <Signup />;
 
-  return (
-    <div>
-      {user ? <Dashboard /> : <Auth />}
-    </div>
-  );
+  return <div>{user ? <Dashboard /> : <Login />}</div>;
 }
 
 export default App;

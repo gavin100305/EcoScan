@@ -1,8 +1,17 @@
+import { useState, useEffect } from 'react';
 import { HiDeviceMobile } from 'react-icons/hi';
 
+import BlurText from '../ui/BlurText';
+
 export default function Hero() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <section className="relative pt-20 pb-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background to-primary/5 overflow-hidden transition-colors duration-300">
+    <section className="relative pt-28 pb-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background to-primary/5 overflow-hidden transition-colors duration-300">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -10,22 +19,36 @@ export default function Hero() {
       </div>
 
       <div className="relative max-w-5xl mx-auto text-center">
-        <div className="inline-block mb-6 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full">
-          <span className="text-sm font-semibold text-primary">Scan for Sustainability</span>
-        </div>
+       
 
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 text-foreground">
-          Know Your{' '}
-          <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500">
-            Product's Environmental Impact
+        <h1 className={`text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'} transition-all duration-700 ease-out`}>
+          <span className="block">
+            <BlurText
+              as="span"
+              text="Know Your"
+              className="inline-block text-foreground"
+              delay={120}
+              animateBy="words"
+              direction="top"
+            />
+          </span>
+          <span className="block">
+            <BlurText
+              as="span"
+              text={`Product's Environmental Impact`}
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500"
+              delay={140}
+              animateBy="words"
+              direction="top"
+            />
           </span>
         </h1>
 
-        <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className={`text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'} transition-all duration-700 ease-out delay-150`}>
           Simply scan a product image with your camera to instantly discover its sustainability attributes, material composition, and environmental footprint.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'} transition-all duration-700 ease-out delay-300`}>
           <a
             href="/dashboard"
             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
