@@ -62,6 +62,23 @@ export const scanAPI = {
     const data = await response.json();
     return data.data || [];
   },
+
+  // Delete a scan
+  deleteScan: async (scanId) => {
+    const token = await getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/scans/${scanId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete scan');
+    }
+
+    return response.json();
+  },
 };
 
 // User API

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiTrash2 } from 'react-icons/fi';
 import Navigation from '../components/Landing/Navigation';
 import Footer from '../components/Landing/Footer';
 import { useAuth } from '../contexts/AuthContext';
@@ -123,6 +124,19 @@ export default function History() {
     return selectedItems.some(i => i.productName === item.productName && i.timestamp === item.timestamp);
   };
 
+  const handleDelete = async (e, scanId) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this scan?')) {
+      try {
+        await scanAPI.deleteScan(scanId);
+        setHistory(prev => prev.filter(item => item.id !== scanId));
+      } catch (err) {
+        console.error('Failed to delete scan:', err);
+        alert('Failed to delete scan. Please try again.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -232,13 +246,22 @@ export default function History() {
                   transition={{ delay: idx * 0.05 }}
                   onClick={() => compareMode ? toggleSelection(item) : viewDetails(item)}
                   whileHover={{ scale: 1.01, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
-                  className={`bg-card border rounded-lg p-6 transition-all cursor-pointer ${
+                  className={`bg-card border rounded-lg p-6 transition-all cursor-pointer relative ${
                     compareMode && isSelected(item)
                       ? 'border-teal-600 bg-teal-600/5'
                       : 'border-border hover:border-teal-600/50'
                   }`}
                 >
-                  <div className="grid md:grid-cols-4 gap-4 items-center">
+                  <motion.button
+                    onClick={(e) => handleDelete(e, item.id)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="absolute top-4 right-4 p-2 rounded-lg text-muted-foreground hover:text-red-500 transition-colors"
+                    aria-label="Delete scan"
+                  >
+                    <FiTrash2 className="w-5 h-5" />
+                  </motion.button>
+                  <div className="grid md:grid-cols-4 gap-4 items-center pr-12">
                     <div className="md:col-span-1">
                       <h3 className="font-semibold text-lg line-clamp-2">{item.productName}</h3>
                       <p className="text-sm text-muted-foreground mt-1">{formatDate(item.timestamp)}</p>
