@@ -7,15 +7,7 @@ import scanRoutes from "./src/routes/scan.routes.js"
 import errorHandler from './src/middlewares/error.middleware.js'
 
 const app = express()
-
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://eco-scan-self.vercel.app",
-    "https://eco-scan-five.vercel.app/",
-  ];
   
-    // Allow all origins (temporary - useful for testing & deployments)
-    // NOTE: For production, restrict this to your app origins.
     app.use(
       cors({
         origin: [
