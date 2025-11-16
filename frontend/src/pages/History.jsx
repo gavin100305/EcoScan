@@ -138,7 +138,7 @@ export default function History() {
     }
   };
 
-  // Export history to a simple text PDF
+  // Export history to a professionally formatted PDF
   const exportHistory = () => {
     if (!history || history.length === 0) {
       alert('No history to export');
@@ -146,59 +146,122 @@ export default function History() {
     }
 
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    const margin = 40;
-    const lineHeight = 16;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 50;
+    const contentWidth = pageWidth - (margin * 2);
     let y = margin;
 
-    doc.setFontSize(18);
-    doc.text('EcoScan - Scan History', margin, y);
-    y += 24;
-
+    // Header
+    doc.setFillColor(20, 184, 166); // teal-600
+    doc.rect(0, 0, pageWidth, 80, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont(undefined, 'bold');
+    doc.text('EcoScan - Scan History', margin, 45);
+    
     doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, margin, 62);
+    
+    y = 110;
+    doc.setTextColor(0, 0, 0);
 
     history.forEach((item, idx) => {
-      const title = `${idx + 1}. ${item.productName || 'Unknown Product'}`;
-      doc.setFontSize(12);
-      doc.text(title, margin, y);
-      y += lineHeight;
-
-      doc.setFontSize(10);
-      const date = `Date: ${formatDate(item.timestamp)}`;
-      doc.text(date, margin, y);
-      y += lineHeight;
-
-      const material = `Material: ${item.materialType || '—'}`;
-      doc.text(material, margin, y);
-      y += lineHeight;
-
-      const recyclability = `Recyclability: ${item.recyclability || '—'}`;
-      doc.text(recyclability, margin, y);
-      y += lineHeight;
-
-      const carbon = `Carbon Footprint: ${item.carbonFootprint || '—'}`;
-      doc.text(carbon, margin, y);
-      y += lineHeight;
-
-      const disposal = `Disposal: ${item.disposalMethod || '—'}`;
-      doc.text(disposal, margin, y);
-      y += lineHeight;
-
-      if (item.alternativeSuggestions) {
-        const alt = `Alternatives: ${item.alternativeSuggestions}`;
-        // wrap long text
-        const split = doc.splitTextToSize(alt, 500);
-        doc.text(split, margin, y);
-        y += lineHeight * split.length;
-      }
-
-      y += lineHeight; // extra spacing
-
-      // New page if needed
-      if (y > 760) {
+      // Check if we need a new page
+      if (y > pageHeight - 150) {
         doc.addPage();
         y = margin;
       }
+
+      // Item number and product name (title)
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(20, 184, 166);
+      const title = `${idx + 1}. ${item.productName || 'Unknown Product'}`;
+      doc.text(title, margin, y);
+      y += 20;
+
+      // Date
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(107, 114, 128); // gray-500
+      doc.text(formatDate(item.timestamp), margin, y);
+      y += 18;
+
+      // Separator line
+      doc.setDrawColor(229, 231, 235); // gray-200
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 15;
+
+      // Details section
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+
+      // Material
+      doc.setFont(undefined, 'bold');
+      doc.text('Material:', margin, y);
+      doc.setFont(undefined, 'normal');
+      const materialText = doc.splitTextToSize(item.materialType || '—', contentWidth - 80);
+      doc.text(materialText, margin + 80, y);
+      y += (materialText.length * 14) + 8;
+
+      // Recyclability
+      doc.setFont(undefined, 'bold');
+      doc.text('Recyclability:', margin, y);
+      doc.setFont(undefined, 'normal');
+      const recyclabilityText = doc.splitTextToSize(item.recyclability || '—', contentWidth - 100);
+      doc.text(recyclabilityText, margin + 100, y);
+      y += (recyclabilityText.length * 14) + 8;
+
+      // Carbon Footprint
+      doc.setFont(undefined, 'bold');
+      doc.text('Carbon Footprint:', margin, y);
+      doc.setFont(undefined, 'normal');
+      doc.text(item.carbonFootprint || '—', margin + 115, y);
+      y += 20;
+
+      // Disposal Method
+      doc.setFont(undefined, 'bold');
+      doc.text('Disposal:', margin, y);
+      doc.setFont(undefined, 'normal');
+      const disposalText = doc.splitTextToSize(item.disposalMethod || '—', contentWidth - 80);
+      doc.text(disposalText, margin + 80, y);
+      y += (disposalText.length * 14) + 8;
+
+      // Alternatives (if available)
+      if (item.alternativeSuggestions) {
+        doc.setFont(undefined, 'bold');
+        doc.text('Alternatives:', margin, y);
+        y += 14;
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(55, 65, 81); // gray-700
+        const altText = doc.splitTextToSize(item.alternativeSuggestions, contentWidth - 20);
+        doc.text(altText, margin + 10, y);
+        y += (altText.length * 14) + 8;
+      }
+
+      // Bottom border for item
+      y += 10;
+      doc.setDrawColor(229, 231, 235);
+      doc.setLineWidth(1);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 25;
+
+      doc.setTextColor(0, 0, 0);
     });
+
+    // Footer on last page
+    const totalPages = doc.internal.pages.length - 1;
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(156, 163, 175); // gray-400
+      doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 50, pageHeight - 30);
+      doc.text('Generated by EcoScan', margin, pageHeight - 30);
+    }
 
     doc.save('ecoscan-history.pdf');
   };
