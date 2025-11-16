@@ -18,7 +18,11 @@ const allowedOrigins = [
     // NOTE: For production, restrict this to your app origins.
     app.use(
       cors({
-        origin: true,
+        origin: [
+          "http://localhost:5173",
+          "https://eco-scan-self.vercel.app",
+          "https://eco-scan-five.vercel.app",
+        ],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
       })
