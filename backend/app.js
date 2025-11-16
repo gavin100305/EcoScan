@@ -14,13 +14,15 @@ const allowedOrigins = [
     "https://eco-scan-five.vercel.app/",
   ];
   
-  app.use(
-    cors({
-      origin: allowedOrigins,
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true,
-    })
-  );
+    // Allow all origins (temporary - useful for testing & deployments)
+    // NOTE: For production, restrict this to your app origins.
+    app.use(
+      cors({
+        origin: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true,
+      })
+    );
 
 app.use(express.json())
 
