@@ -11,6 +11,27 @@ const getAuthToken = async () => {
   return session.access_token;
 };
 
+// Fetch with timeout and retry for Render cold starts
+const fetchWithTimeout = async (url, options = {}, timeout = 60000) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout - backend might be waking up. Please try again.');
+    }
+    throw error;
+  }
+};
+
 // Scan API
 export const scanAPI = {
   // Upload and scan a product image
@@ -20,16 +41,17 @@ export const scanAPI = {
     formData.append('image', imageFile);
     formData.append('userId', userId || 'anonymous');
 
-    const response = await fetch(`${API_BASE_URL}/scans`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/scans`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
       },
       body: formData,
-    });
+    }, 90000); // 90 second timeout for upload + cold start
 
     if (!response.ok) {
-      throw new Error('Failed to scan product');
+      const error = await response.text();
+      throw new Error(error || 'Failed to scan product');
     }
 
     const result = await response.json();
@@ -49,7 +71,7 @@ export const scanAPI = {
   // Get scan history
   getHistory: async () => {
     const token = await getAuthToken();
-    const response = await fetch(`${API_BASE_URL}/scans`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/scans`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -66,7 +88,7 @@ export const scanAPI = {
   // Delete a scan
   deleteScan: async (scanId) => {
     const token = await getAuthToken();
-    const response = await fetch(`${API_BASE_URL}/scans/${scanId}`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/scans/${scanId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -86,7 +108,7 @@ export const userAPI = {
   // Delete user account
   deleteAccount: async () => {
     const token = await getAuthToken();
-    const response = await fetch(`${API_BASE_URL}/user/delete`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/user/delete`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
