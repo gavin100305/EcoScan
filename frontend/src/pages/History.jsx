@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiTrash2 } from 'react-icons/fi';
+import { jsPDF } from 'jspdf';
 import Navigation from '../components/Landing/Navigation';
 import Footer from '../components/Landing/Footer';
 import { useAuth } from '../contexts/AuthContext';
@@ -137,6 +138,71 @@ export default function History() {
     }
   };
 
+  // Export history to a simple text PDF
+  const exportHistory = () => {
+    if (!history || history.length === 0) {
+      alert('No history to export');
+      return;
+    }
+
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const margin = 40;
+    const lineHeight = 16;
+    let y = margin;
+
+    doc.setFontSize(18);
+    doc.text('EcoScan - Scan History', margin, y);
+    y += 24;
+
+    doc.setFontSize(10);
+
+    history.forEach((item, idx) => {
+      const title = `${idx + 1}. ${item.productName || 'Unknown Product'}`;
+      doc.setFontSize(12);
+      doc.text(title, margin, y);
+      y += lineHeight;
+
+      doc.setFontSize(10);
+      const date = `Date: ${formatDate(item.timestamp)}`;
+      doc.text(date, margin, y);
+      y += lineHeight;
+
+      const material = `Material: ${item.materialType || '—'}`;
+      doc.text(material, margin, y);
+      y += lineHeight;
+
+      const recyclability = `Recyclability: ${item.recyclability || '—'}`;
+      doc.text(recyclability, margin, y);
+      y += lineHeight;
+
+      const carbon = `Carbon Footprint: ${item.carbonFootprint || '—'}`;
+      doc.text(carbon, margin, y);
+      y += lineHeight;
+
+      const disposal = `Disposal: ${item.disposalMethod || '—'}`;
+      doc.text(disposal, margin, y);
+      y += lineHeight;
+
+      if (item.alternativeSuggestions) {
+        const alt = `Alternatives: ${item.alternativeSuggestions}`;
+        // wrap long text
+        const split = doc.splitTextToSize(alt, 500);
+        doc.text(split, margin, y);
+        y += lineHeight * split.length;
+      }
+
+      y += lineHeight; // extra spacing
+
+      // New page if needed
+      if (y > 760) {
+        doc.addPage();
+        y = margin;
+      }
+    });
+
+    doc.save('ecoscan-history.pdf');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -182,6 +248,14 @@ export default function History() {
                   {compareMode ? 'Cancel Compare' : 'Compare Mode'}
                 </motion.button>
               )}
+              <motion.button
+                onClick={() => exportHistory()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-card border border-border text-foreground hover:bg-muted/50 hover:border-teal-600/50 font-semibold rounded-lg transition-colors"
+              >
+                Export PDF
+              </motion.button>
               <motion.button
                 onClick={() => window.location.href = '/scan'}
                 whileHover={{ scale: 1.05 }}
