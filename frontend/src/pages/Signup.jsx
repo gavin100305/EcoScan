@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { PiPlantFill } from 'react-icons/pi';
 import { FcGoogle } from 'react-icons/fc';
-import { HiOutlineMail, HiLockClosed, HiChevronLeft } from 'react-icons/hi';
+import { HiOutlineMail, HiLockClosed, HiChevronLeft, HiUser } from 'react-icons/hi';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 
 export default function Signup() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const { signUp, signInWithGoogle } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
@@ -25,7 +27,18 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { error } = await signUp(email, password);
+    
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters');
+      return;
+    }
+    
+    const { error } = await signUp(email, password, fullName);
     if (error) alert(error.message);
     else window.location.href = '/';
   };
@@ -55,6 +68,21 @@ export default function Signup() {
 
       <motion.form variants={item} onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label className="block text-sm text-muted-foreground mb-2">Full Name</label>
+          <div className="flex items-center gap-2 bg-background border border-border rounded-md p-2">
+            <HiUser className="w-5 h-5 text-muted-foreground" />
+            <input
+              className="w-full bg-transparent outline-none"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              placeholder="Enter your full name"
+            />
+          </div>
+        </div>
+
+        <div>
           <label className="block text-sm text-muted-foreground mb-2">Email</label>
           <div className="flex items-center gap-2 bg-background border border-border rounded-md p-2">
             <HiOutlineMail className="w-5 h-5 text-muted-foreground" />
@@ -79,7 +107,24 @@ export default function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Create a password"
+              minLength={6}
+              placeholder="Create a password (min 6 characters)"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm text-muted-foreground mb-2">Confirm Password</label>
+          <div className="flex items-center gap-2 bg-background border border-border rounded-md p-2">
+            <HiLockClosed className="w-5 h-5 text-muted-foreground" />
+            <input
+              className="w-full bg-transparent outline-none"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="Confirm your password"
             />
           </div>
         </div>
