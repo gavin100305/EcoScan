@@ -5,6 +5,7 @@ import { HiOutlineMail, HiLockClosed, HiChevronLeft, HiUser } from 'react-icons/
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion } from 'framer-motion';
+import EmailVerificationModal from '../components/ui/EmailVerificationModal';
 
 
 export default function Signup() {
@@ -12,6 +13,7 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { signUp, signInWithGoogle } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
@@ -38,9 +40,16 @@ export default function Signup() {
       return;
     }
     
-    const { error } = await signUp(email, password, fullName);
-    if (error) alert(error.message);
-    else window.location.href = '/';
+    const { data, error } = await signUp(email, password, fullName);
+    if (error) {
+      alert(error.message);
+    } else {
+      // Show email verification modal instead of redirecting
+      setShowVerificationModal(true);
+      // Clear password fields for security
+      setPassword('');
+      setConfirmPassword('');
+    }
   };
 
   const handleGoogle = async () => {
@@ -157,6 +166,16 @@ export default function Signup() {
         Already have an account? <a href="/login" className="text-primary font-medium">Sign in</a>
       </motion.p>
       </motion.div>
+
+      {/* Email Verification Modal */}
+      <EmailVerificationModal 
+        isOpen={showVerificationModal}
+        onClose={() => {
+          setShowVerificationModal(false);
+          window.location.href = '/login';
+        }}
+        email={email}
+      />
     </div>
   );
 }
